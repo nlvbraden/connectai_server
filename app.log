@@ -1,0 +1,526 @@
+2025-08-27 19:40:43,580 - app.utils.logging - INFO - Logging configured with level: INFO
+2025-08-27 19:40:45,058 - app.utils.logging - INFO - Logging configured with level: INFO
+2025-08-27 19:40:45,071 - app.app.main - INFO - Starting ConnectAI Server...
+2025-08-27 19:40:45,071 - app.app.main - INFO - Checking database connection...
+2025-08-27 19:40:45,071 - app.app.main - INFO - Initializing components...
+2025-08-27 19:40:45,071 - app.app.main - INFO - Server configuration:
+2025-08-27 19:40:45,071 - app.app.main - INFO -   - Host: 127.0.0.1:8000
+2025-08-27 19:40:45,071 - app.app.main - INFO -   - Log Level: info
+2025-08-27 19:40:45,071 - app.app.main - INFO -   - Database URL: postgres://vultradmin:AVNS_B9t...
+2025-08-27 19:40:45,071 - app.app.main - INFO -   - Gemini Model: gemini-live-2.5-flash-preview-native-audio
+2025-08-27 19:40:45,071 - app.app.main - INFO - Google ADK is available
+2025-08-27 19:40:45,071 - app.app.main - INFO - ConnectAI Server startup complete
+2025-08-27 19:41:41,567 - app.app.routers.calls - INFO - Incoming call - Domain: faketacos, DNIS: +16013019997, ANI: +16014077402, CallID: 20250828004141061903-a347b353401c850eec166b2540946ad2
+2025-08-27 19:41:41,871 - app.app.routers.webhooks - INFO - New NetSapiens WebSocket connection attempt: 962a5fe5-b69b-4e61-a809-b06446b63f2d
+2025-08-27 19:41:41,871 - app.core.netsapiens_handler - INFO - WebSocket connected: 962a5fe5-b69b-4e61-a809-b06446b63f2d
+2025-08-27 19:41:41,873 - app.core.session_manager - INFO - ADK session started for user: 962a5fe5-b69b-4e61-a809-b06446b63f2d, audio: True, live_events type: <class 'async_generator'>
+2025-08-27 19:41:41,873 - app.core.session_manager - INFO - ADK session started for: 962a5fe5-b69b-4e61-a809-b06446b63f2d
+2025-08-27 19:41:41,873 - app.core.session_manager - INFO - Agent session started: 962a5fe5-b69b-4e61-a809-b06446b63f2d
+2025-08-27 19:41:41,873 - app.core.session_manager - INFO - Starting agent-to-NetSapiens loop for 962a5fe5-b69b-4e61-a809-b06446b63f2d, live_events type: <class 'async_generator'>
+2025-08-27 19:41:41,910 - app.core.session_manager - INFO - Session communication cancelled: 962a5fe5-b69b-4e61-a809-b06446b63f2d
+2025-08-27 19:41:41,911 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-13' coro=<<async_generator_athrow without __name__>()> exception=RuntimeError('Attempted to exit cancel scope in a different task than it was entered in')>
+  + Exception Group Traceback (most recent call last):
+  |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 772, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | BaseExceptionGroup: unhandled errors in a TaskGroup (2 sub-exceptions)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    |     yield
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpx/_transports/default.py", line 394, in handle_async_request
+    |     resp = await self._pool.handle_async_request(req)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpcore/_async/connection_pool.py", line 256, in handle_async_request
+    |     raise exc from None
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpcore/_async/connection_pool.py", line 236, in handle_async_request
+    |     response = await connection.handle_async_request(
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         pool_request.request
+    |         ^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpcore/_async/connection.py", line 101, in handle_async_request
+    |     raise exc
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpcore/_async/connection.py", line 78, in handle_async_request
+    |     stream = await self._connect(request)
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpcore/_async/connection.py", line 124, in _connect
+    |     stream = await self._network_backend.connect_tcp(**kwargs)
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpcore/_backends/auto.py", line 31, in connect_tcp
+    |     return await self._backend.connect_tcp(
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<5 lines>...
+    |     )
+    |     ^
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpcore/_backends/anyio.py", line 113, in connect_tcp
+    |     with map_exceptions(exc_map):
+    |          ~~~~~~~~~~~~~~^^^^^^^^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 162, in __exit__
+    |     self.gen.throw(value)
+    |     ~~~~~~~~~~~~~~^^^^^^^
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    |     raise to_exc(exc) from exc
+    | httpcore.ConnectError: All connection attempts failed
+    | 
+    | The above exception was the direct cause of the following exception:
+    | 
+    | Traceback (most recent call last):
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/mcp/client/streamable_http.py", line 405, in handle_request_async
+    |     await self._handle_post_request(ctx)
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/mcp/client/streamable_http.py", line 259, in _handle_post_request
+    |     async with ctx.client.stream(
+    |                ~~~~~~~~~~~~~~~~~^
+    |         "POST",
+    |         ^^^^^^^
+    |     ...<2 lines>...
+    |         headers=headers,
+    |         ^^^^^^^^^^^^^^^^
+    |     ) as response:
+    |     ^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 214, in __aenter__
+    |     return await anext(self.gen)
+    |            ^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpx/_client.py", line 1583, in stream
+    |     response = await self.send(
+    |                ^^^^^^^^^^^^^^^^
+    |     ...<4 lines>...
+    |     )
+    |     ^
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpx/_client.py", line 1629, in send
+    |     response = await self._send_handling_auth(
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<4 lines>...
+    |     )
+    |     ^
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpx/_client.py", line 1657, in _send_handling_auth
+    |     response = await self._send_handling_redirects(
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpx/_client.py", line 1694, in _send_handling_redirects
+    |     response = await self._send_single_request(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpx/_client.py", line 1730, in _send_single_request
+    |     response = await transport.handle_async_request(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpx/_transports/default.py", line 393, in handle_async_request
+    |     with map_httpcore_exceptions():
+    |          ~~~~~~~~~~~~~~~~~~~~~~~^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 162, in __exit__
+    |     self.gen.throw(value)
+    |     ~~~~~~~~~~~~~~^^^^^^^
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    |     raise mapped_exc(message) from exc
+    | httpx.ConnectError: All connection attempts failed
+    +---------------- 2 ----------------
+    | Traceback (most recent call last):
+    |   File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/mcp/client/streamable_http.py", line 498, in streamablehttp_client
+    |     yield (
+    |     ...<3 lines>...
+    |     )
+    | GeneratorExit
+    +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/mcp/client/streamable_http.py", line 474, in streamablehttp_client
+    async with anyio.create_task_group() as tg:
+               ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 778, in __aexit__
+    if self.cancel_scope.__exit__(type(exc), exc, exc.__traceback__):
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 457, in __exit__
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Attempted to exit cancel scope in a different task than it was entered in
+2025-08-27 19:41:41,964 - app.core.netsapiens_handler - WARNING - Unknown message type from NetSapiens: connected
+2025-08-27 19:41:41,964 - app.core.netsapiens_handler - INFO - Call started for session: 962a5fe5-b69b-4e61-a809-b06446b63f2d
+2025-08-27 19:42:11,566 - app.core.netsapiens_handler - INFO - NetSapiens WebSocket disconnected in stream loop: 962a5fe5-b69b-4e61-a809-b06446b63f2d
+2025-08-27 19:42:11,566 - app.core.session_manager - INFO - ADK session stopped for: 962a5fe5-b69b-4e61-a809-b06446b63f2d
+2025-08-27 19:42:11,566 - app.core.session_manager - INFO - Agent session ended: 962a5fe5-b69b-4e61-a809-b06446b63f2d
+2025-08-27 19:42:11,566 - app.core.netsapiens_handler - INFO - WebSocket disconnected: 962a5fe5-b69b-4e61-a809-b06446b63f2d
+2025-08-27 19:42:29,841 - app.app.main - INFO - Shutting down ConnectAI Server...
+2025-08-27 19:42:29,841 - app.app.main - INFO - ConnectAI Server shutdown complete
+2025-08-27 19:42:31,783 - app.utils.logging - INFO - Logging configured with level: INFO
+2025-08-27 19:42:31,794 - app.app.main - INFO - Starting ConnectAI Server...
+2025-08-27 19:42:31,794 - app.app.main - INFO - Checking database connection...
+2025-08-27 19:42:31,794 - app.app.main - INFO - Initializing components...
+2025-08-27 19:42:31,794 - app.app.main - INFO - Server configuration:
+2025-08-27 19:42:31,794 - app.app.main - INFO -   - Host: 127.0.0.1:8000
+2025-08-27 19:42:31,794 - app.app.main - INFO -   - Log Level: info
+2025-08-27 19:42:31,794 - app.app.main - INFO -   - Database URL: postgres://vultradmin:AVNS_B9t...
+2025-08-27 19:42:31,794 - app.app.main - INFO -   - Gemini Model: gemini-live-2.5-flash-preview-native-audio
+2025-08-27 19:42:31,794 - app.app.main - INFO - Google ADK is available
+2025-08-27 19:42:31,794 - app.app.main - INFO - ConnectAI Server startup complete
+2025-08-27 19:42:34,099 - app.app.routers.calls - INFO - Incoming call - Domain: faketacos, DNIS: +16013019997, ANI: +16014077402, CallID: 20250828004233062365-a347b353401c850eec166b2540946ad2
+2025-08-27 19:42:34,389 - app.app.routers.webhooks - INFO - New NetSapiens WebSocket connection attempt: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:42:34,389 - app.core.netsapiens_handler - INFO - WebSocket connected: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:42:34,391 - app.core.session_manager - INFO - ADK session started for user: c875a782-96f4-4dc5-9fb6-f4f7209abd9d, audio: True, live_events type: <class 'async_generator'>
+2025-08-27 19:42:34,391 - app.core.session_manager - INFO - ADK session started for: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:42:34,391 - app.core.session_manager - INFO - Agent session started: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:42:34,391 - app.core.session_manager - INFO - Starting agent-to-NetSapiens loop for c875a782-96f4-4dc5-9fb6-f4f7209abd9d, live_events type: <class 'async_generator'>
+2025-08-27 19:42:34,615 - app.core.netsapiens_handler - WARNING - Unknown message type from NetSapiens: connected
+2025-08-27 19:42:34,615 - app.core.netsapiens_handler - INFO - Call started for session: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:42:34,972 - google_genai.live - INFO - b'{\n  "setupComplete": {\n    "sessionId": "12a35c71-ec46-4c5c-8a23-2e08b1324377"\n  }\n}\n'
+2025-08-27 19:42:35,604 - app.core.session_manager - INFO - Received text from agent: Thank you...
+2025-08-27 19:42:35,604 - app.core.session_manager - INFO - Received audio from agent: 1514 bytes
+2025-08-27 19:42:35,618 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:35,633 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:35,642 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:35,670 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:42:35,693 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:42:35,747 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:35,797 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:35,848 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:35,921 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:42:35,923 - app.core.session_manager - INFO - Received text from agent:  for calling...
+2025-08-27 19:42:35,929 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:35,975 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,034 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,075 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,119 - app.core.session_manager - INFO - Received text from agent:  Orthodontic...
+2025-08-27 19:42:36,125 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,175 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,225 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,462 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,464 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:36,464 - app.core.session_manager - INFO - Received text from agent:  Specialists...
+2025-08-27 19:42:36,471 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,478 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,484 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,511 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:42:36,512 - app.core.session_manager - INFO - Received text from agent:  of Florida....
+2025-08-27 19:42:36,512 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,562 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,612 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,667 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,724 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:36,725 - app.core.session_manager - INFO - Received text from agent:  This...
+2025-08-27 19:42:36,726 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,777 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:36,826 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:37,282 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:37,283 - app.core.session_manager - INFO - Received text from agent:  is Sophie....
+2025-08-27 19:42:37,286 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:37,291 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:37,292 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:37,294 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:42:37,295 - app.core.session_manager - INFO - Received text from agent:  How can...
+2025-08-27 19:42:37,295 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:37,297 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:37,299 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:37,307 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:37,308 - app.core.session_manager - INFO - Received text from agent:  I help...
+2025-08-27 19:42:37,308 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:37,354 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:42:37,354 - app.core.session_manager - INFO - Received text from agent:  you today?...
+2025-08-27 19:42:37,355 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:37,406 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:37,458 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:38,052 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:38,055 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:42:38,060 - app.core.session_manager - INFO - Received text from agent: Thank you for calling Orthodontic Specialists of F...
+2025-08-27 19:42:38,060 - app.core.session_manager - INFO - Turn complete for session: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:42:44,339 - app.core.session_manager - INFO - Received text from agent:  Hey, how's it going?...
+2025-08-27 19:42:44,933 - app.core.session_manager - INFO - Received text from agent: I'm doing...
+2025-08-27 19:42:44,934 - app.core.session_manager - INFO - Received audio from agent: 1514 bytes
+2025-08-27 19:42:44,947 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:44,959 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:44,971 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:44,998 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:42:45,024 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:42:45,074 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,126 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,177 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,223 - app.core.session_manager - INFO - Received text from agent:  great,...
+2025-08-27 19:42:45,225 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,276 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,326 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,376 - app.core.session_manager - INFO - Received text from agent:  thanks...
+2025-08-27 19:42:45,376 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,452 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:42:45,453 - app.core.session_manager - INFO - Received text from agent:  for asking....
+2025-08-27 19:42:45,453 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,502 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,555 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,818 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,820 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:45,820 - app.core.session_manager - INFO - Received text from agent:  How can...
+2025-08-27 19:42:45,820 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,822 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,823 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,824 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,904 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:42:45,905 - app.core.session_manager - INFO - Received text from agent:  I help...
+2025-08-27 19:42:45,905 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:45,995 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:42:45,996 - app.core.session_manager - INFO - Received text from agent:  you?...
+2025-08-27 19:42:45,996 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:46,045 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:46,094 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:46,133 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:46,142 - app.core.session_manager - INFO - Received text from agent: I'm doing great, thanks for asking. How can I help...
+2025-08-27 19:42:46,143 - app.core.session_manager - INFO - Turn complete for session: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:42:56,067 - app.core.session_manager - INFO - Received text from agent:  Um, I just wanted to see if you are licking your ...
+2025-08-27 19:42:56,669 - app.core.session_manager - INFO - Received text from agent: I'm not...
+2025-08-27 19:42:56,670 - app.core.session_manager - INFO - Received audio from agent: 1514 bytes
+2025-08-27 19:42:56,682 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:56,696 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:56,707 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:42:56,734 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:42:56,761 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:42:56,810 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:56,860 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:56,911 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:56,999 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:42:57,000 - app.core.session_manager - INFO - Received text from agent:  doing...
+2025-08-27 19:42:57,000 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:57,087 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:42:57,088 - app.core.session_manager - INFO - Received text from agent:  that....
+2025-08-27 19:42:57,088 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:57,139 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:57,188 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:57,236 - app.core.session_manager - INFO - Received text from agent:  How can...
+2025-08-27 19:42:57,238 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:57,288 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:57,512 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:57,514 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:42:57,515 - app.core.session_manager - INFO - Received text from agent:  I help...
+2025-08-27 19:42:57,516 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:57,518 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:42:57,519 - app.core.session_manager - INFO - Received text from agent:  you?...
+2025-08-27 19:42:57,519 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:57,566 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:57,616 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:42:57,669 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:42:57,676 - app.core.session_manager - INFO - Received text from agent: I'm not doing that. How can I help you?...
+2025-08-27 19:42:57,676 - app.core.session_manager - INFO - Turn complete for session: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:43:03,104 - app.core.session_manager - INFO - Received text from agent:  You're sure you're not doing that?...
+2025-08-27 19:43:03,723 - app.core.session_manager - INFO - Received text from agent: Yes, I'm...
+2025-08-27 19:43:03,723 - app.core.session_manager - INFO - Received audio from agent: 1514 bytes
+2025-08-27 19:43:03,734 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:03,748 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:03,759 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:03,786 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:03,809 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:03,861 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:03,912 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:03,965 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,015 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,063 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,112 - app.core.session_manager - INFO - Received text from agent:  sure....
+2025-08-27 19:43:04,115 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,166 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,251 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:43:04,253 - app.core.session_manager - INFO - Received text from agent:  Is there...
+2025-08-27 19:43:04,258 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,305 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,568 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,570 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,571 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,573 - app.core.session_manager - INFO - Received text from agent:  something...
+2025-08-27 19:43:04,573 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,574 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,616 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:04,617 - app.core.session_manager - INFO - Received text from agent:  else...
+2025-08-27 19:43:04,617 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,692 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:04,693 - app.core.session_manager - INFO - Received text from agent:  I can...
+2025-08-27 19:43:04,694 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,753 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:04,754 - app.core.session_manager - INFO - Received text from agent:  help...
+2025-08-27 19:43:04,756 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,819 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:04,820 - app.core.session_manager - INFO - Received text from agent:  you with?...
+2025-08-27 19:43:04,820 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,869 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,918 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:04,970 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:05,408 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:05,415 - app.core.session_manager - INFO - Received text from agent: Yes, I'm sure. Is there something else I can help ...
+2025-08-27 19:43:05,415 - app.core.session_manager - INFO - Turn complete for session: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:43:07,269 - app.core.session_manager - INFO - Agent interrupted for session: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:43:07,269 - app.core.netsapiens_handler - INFO - Sent clear audio event for session: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:43:12,423 - app.core.session_manager - INFO - Received text from agent:  no, that's all for now. Thank you....
+2025-08-27 19:43:13,045 - app.core.session_manager - INFO - Received text from agent: You're welcome....
+2025-08-27 19:43:13,045 - app.core.session_manager - INFO - Received audio from agent: 1514 bytes
+2025-08-27 19:43:13,054 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:13,067 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:13,079 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:13,108 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:13,131 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:13,184 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:13,232 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:13,282 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:13,333 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:13,421 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:43:13,422 - app.core.session_manager - INFO - Received text from agent:  Feel...
+2025-08-27 19:43:13,423 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:13,471 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:13,523 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:13,597 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:13,598 - app.core.session_manager - INFO - Received text from agent:  free to...
+2025-08-27 19:43:13,599 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:13,877 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:13,878 - app.core.session_manager - INFO - Received text from agent:  call...
+2025-08-27 19:43:13,879 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:13,881 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:13,882 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:13,882 - app.core.session_manager - INFO - Received text from agent:  if you...
+2025-08-27 19:43:13,886 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:13,891 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:13,891 - app.core.session_manager - INFO - Received text from agent:  need...
+2025-08-27 19:43:13,892 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:13,925 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:13,925 - app.core.session_manager - INFO - Received text from agent:  anything...
+2025-08-27 19:43:13,927 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:13,974 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:14,037 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:14,038 - app.core.session_manager - INFO - Received text from agent:  else....
+2025-08-27 19:43:14,038 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:14,089 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:14,138 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:14,189 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:14,243 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:14,250 - app.core.session_manager - INFO - Received text from agent: You're welcome. Feel free to call if you need anyt...
+2025-08-27 19:43:14,250 - app.core.session_manager - INFO - Turn complete for session: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:43:20,034 - app.core.session_manager - INFO - Received text from agent:  All right, you too....
+2025-08-27 19:43:20,625 - app.core.session_manager - INFO - Received text from agent: Thank you....
+2025-08-27 19:43:20,626 - app.core.session_manager - INFO - Received audio from agent: 1514 bytes
+2025-08-27 19:43:20,638 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:20,650 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:20,665 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:20,690 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:20,713 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:20,766 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:20,816 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:20,867 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:20,954 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:43:20,955 - app.core.session_manager - INFO - Received text from agent:  Have a...
+2025-08-27 19:43:20,956 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:21,006 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:21,067 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:21,068 - app.core.session_manager - INFO - Received text from agent:  good day....
+2025-08-27 19:43:21,068 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:21,119 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:21,170 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:21,220 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:21,469 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:21,477 - app.core.session_manager - INFO - Received text from agent: Thank you. Have a good day....
+2025-08-27 19:43:21,477 - app.core.session_manager - INFO - Turn complete for session: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:43:25,511 - app.core.session_manager - INFO - Received text from agent:  All right, bye....
+2025-08-27 19:43:26,082 - app.core.session_manager - INFO - Received text from agent: Goodbye....
+2025-08-27 19:43:26,082 - app.core.session_manager - INFO - Received audio from agent: 1514 bytes
+2025-08-27 19:43:26,095 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:26,107 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:26,119 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:26,147 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:26,174 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:26,223 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:26,273 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:26,322 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:26,373 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:26,424 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:26,455 - app.core.session_manager - INFO - Received text from agent: Goodbye....
+2025-08-27 19:43:26,455 - app.core.session_manager - INFO - Turn complete for session: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:43:30,326 - app.core.session_manager - INFO - Received text from agent:  Are you going to hang up?...
+2025-08-27 19:43:30,920 - app.core.session_manager - INFO - Received text from agent: Yes, I'm...
+2025-08-27 19:43:30,920 - app.core.session_manager - INFO - Received audio from agent: 1514 bytes
+2025-08-27 19:43:30,933 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:30,945 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:30,960 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:30,985 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:31,009 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:31,061 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:31,110 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:31,161 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:31,212 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:31,262 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:31,350 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:43:31,351 - app.core.session_manager - INFO - Received text from agent:  hanging...
+2025-08-27 19:43:31,352 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:31,438 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:43:31,438 - app.core.session_manager - INFO - Received text from agent:  up now....
+2025-08-27 19:43:31,439 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:31,489 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:31,539 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:31,969 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:31,971 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:43:31,975 - app.core.session_manager - INFO - Received text from agent: Yes, I'm hanging up now....
+2025-08-27 19:43:31,975 - app.core.session_manager - INFO - Turn complete for session: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:43:36,128 - app.core.session_manager - INFO - Received text from agent:  Okay, goodbye....
+2025-08-27 19:43:36,703 - app.core.session_manager - INFO - Received text from agent: Goodbye....
+2025-08-27 19:43:36,704 - app.core.session_manager - INFO - Received audio from agent: 1514 bytes
+2025-08-27 19:43:36,716 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:36,728 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:36,741 - app.core.session_manager - INFO - Received audio from agent: 1920 bytes
+2025-08-27 19:43:36,768 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:36,792 - app.core.session_manager - INFO - Received audio from agent: 3840 bytes
+2025-08-27 19:43:36,843 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:36,894 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:36,944 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:36,996 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:37,045 - app.core.session_manager - INFO - Received audio from agent: 7680 bytes
+2025-08-27 19:43:37,109 - app.core.session_manager - INFO - Received audio from agent: 5760 bytes
+2025-08-27 19:43:37,114 - app.core.session_manager - INFO - Received text from agent: Goodbye....
+2025-08-27 19:43:37,114 - app.core.session_manager - INFO - Turn complete for session: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:43:41,256 - app.core.session_manager - INFO - Received text from agent:  Please call the hang up function....
+2025-08-27 19:43:41,507 - app.core.session_manager - INFO - Turn complete for session: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:43:41,573 - app.core.session_manager - ERROR - Error in agent-to-NetSapiens loop c875a782-96f4-4dc5-9fb6-f4f7209abd9d: received 1011 (internal error) Internal error encountered.; then sent 1011 (internal error) Internal error encountered.
+2025-08-27 19:43:41,573 - app.core.session_manager - ERROR - Full traceback:
+Traceback (most recent call last):
+  File "/Users/bradensmith/Developer/connectai_server/app/core/session_manager.py", line 219, in _agent_to_netsapiens_loop
+    async for event in session.live_events:
+        await self._process_agent_event(session, event)
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/google/adk/runners.py", line 442, in run_live
+    async for event in self._exec_with_plugin(
+    ...<2 lines>...
+      yield event
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/google/adk/runners.py", line 274, in _exec_with_plugin
+    async for event in execute_fn(invocation_context):
+    ...<6 lines>...
+      yield (modified_event if modified_event else event)
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/google/adk/runners.py", line 439, in execute
+    async for event in ctx.agent.run_live(ctx):
+      yield event
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/google/adk/agents/base_agent.py", line 237, in run_live
+    async for event in self._run_live_impl(ctx):
+      yield event
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/google/adk/agents/llm_agent.py", line 293, in _run_live_impl
+    async for event in self._llm_flow.run_live(ctx):
+      self.__maybe_save_output_to_state(event)
+      yield event
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/google/adk/flows/llm_flows/base_llm_flow.py", line 117, in run_live
+    async for event in self._receive_from_model(
+    ...<36 lines>...
+        return
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/google/adk/flows/llm_flows/base_llm_flow.py", line 248, in _receive_from_model
+    async for llm_response in llm_connection.receive():
+    ...<29 lines>...
+        yield event
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/google/adk/models/gemini_llm_connection.py", line 145, in receive
+    async for message in self._gemini_session.receive():
+    ...<75 lines>...
+        yield LlmResponse(content=types.Content(role='model', parts=parts))
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/google/genai/live.py", line 439, in receive
+    while result := await self._receive():
+                    ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/google/genai/live.py", line 520, in _receive
+    raw_response = await self._ws.recv(decode=False)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bradensmith/Developer/connectai_server/venv/lib/python3.13/site-packages/websockets/asyncio/connection.py", line 322, in recv
+    raise self.protocol.close_exc from self.recv_exc
+websockets.exceptions.ConnectionClosedError: received 1011 (internal error) Internal error encountered.; then sent 1011 (internal error) Internal error encountered.
+2025-08-27 19:44:12,667 - app.core.netsapiens_handler - INFO - NetSapiens WebSocket disconnected in stream loop: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:44:12,667 - app.core.session_manager - INFO - ADK session stopped for: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:44:12,667 - app.core.session_manager - INFO - Agent session ended: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-27 19:44:12,667 - app.core.netsapiens_handler - INFO - WebSocket disconnected: c875a782-96f4-4dc5-9fb6-f4f7209abd9d
+2025-08-28 14:13:07,939 - app.app.main - INFO - Shutting down ConnectAI Server...
+2025-08-28 14:13:07,940 - app.app.main - INFO - ConnectAI Server shutdown complete

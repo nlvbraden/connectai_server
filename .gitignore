@@ -1,0 +1,11 @@
+venv
+/.env
+
+# Terraform
+terraform
+
+# Google ADK
+/service-account-key.json
+
+#Pycache
+__pycache__
