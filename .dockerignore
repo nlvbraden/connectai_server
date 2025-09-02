@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+.venv/
+venv/
+
+# Environments
+.env
+.env.*
+service-account-key.json
+
+# Git & IDE
+.git/
+.gitignore
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Logs & data
+*.log
+app.log
+*.sqlite
+
+# Tests & caches
+.pytest_cache/
+.mypy_cache/
+
+# Terraform & build
+terraform/
+.terraform/
+.terraform.lock.hcl
+
+# Node & front-end (if any)
+node_modules/
+
+# Misc
+*.bak
+*.tmp

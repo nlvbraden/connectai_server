@@ -11,11 +11,11 @@ from contextlib import asynccontextmanager
 from .routers import health, webhooks, calls
 
 # Import utilities and configuration
-from .config import settings
+from .settings import settings
 from .utils.logging import setup_logging, get_logger
 # Import core components for initialization
 from .core.netsapiens_handler import netsapiens_handler
-from .core.session_manager import AgentSessionManager
+from .core.agent_session_manager import AgentSessionManager
 
 # Setup logging
 setup_logging()
@@ -34,13 +34,6 @@ async def lifespan(app: FastAPI):
         
         # Initialize components
         logger.info("Initializing components...")
-        
-        # Log configuration
-        logger.info(f"Server configuration:")
-        logger.info(f"  - Host: {settings.host}:{settings.port}")
-        logger.info(f"  - Log Level: {settings.log_level}")
-        logger.info(f"  - Database URL: {settings.database_url[:30]}...")
-        logger.info(f"  - Gemini Model: {settings.gemini_model}")
         
         # Check Google ADK availability
         try:

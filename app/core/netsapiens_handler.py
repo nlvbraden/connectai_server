@@ -1,11 +1,13 @@
 """WebSocket handler for NetSapiens WebResponder integration."""
 
 import json
+import asyncio
 import logging
 from typing import Dict, Optional, Any
 from fastapi import WebSocket, WebSocketDisconnect
-from .session_manager import AgentSessionManager
+from .agent_session_manager import AgentSessionManager
 from .audio_processor import AudioProcessor
+from ..services.database_service import DatabaseService
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +18,7 @@ class NetSapiensWebSocketHandler:
         self.active_connections: Dict[str, WebSocket] = {}
         self.session_manager = AgentSessionManager()
         self.audio_processor = AudioProcessor()
+        self.db = DatabaseService()
     
     async def connect(self, websocket: WebSocket, session_id: str) -> bool:
         """Accept WebSocket connection and initialize session."""
@@ -42,22 +45,6 @@ class NetSapiensWebSocketHandler:
     async def handle_netsapiens_stream(self, websocket: WebSocket, session_id: str):
         """Handle incoming NetSapiens WebSocket stream."""
         try:
-            #TODO: Get business info
-            business_domain = "faketacos"
-            
-            if not business_domain:
-                await self._send_error(websocket, "Unable to identify business domain")
-                return
-    
-            # Start the agent session with Google ADK
-            success = await self.session_manager.start_session(
-                session_id, business_domain, websocket
-            )
-            
-            if not success:
-                await self._send_error(websocket, "Failed to start agent session")
-                return
-            
             # Handle the streaming conversation
             await self._handle_stream_loop(websocket, session_id)
             
@@ -73,32 +60,49 @@ class NetSapiensWebSocketHandler:
         try:
             while True:
                 # Receive data from NetSapiens
-                data = await websocket.receive_text()
+                try:
+                    data = await asyncio.wait_for(websocket.receive_text(), timeout=60)
+                except asyncio.TimeoutError:
+                    logger.warning(f"WebSocket idle timeout in stream loop: {session_id}")
+                    # Proactively stop the call to avoid lingering sessions
+                    await self._handle_call_stop(session_id, {"reason": "idle_timeout"})
+                    break
                 message = json.loads(data)
                 
                 # Process different message types
-                await self._process_netsapiens_message(websocket, session_id, message)
+                should_continue = await self._process_netsapiens_message(websocket, session_id, message)
+                if not should_continue:
+                    # Stop event received or terminal condition; break out
+                    break
                 
         except WebSocketDisconnect:
             logger.info(f"NetSapiens WebSocket disconnected in stream loop: {session_id}")
         except Exception as e:
             logger.error(f"Error in stream loop {session_id}: {str(e)}")
     
-    async def _process_netsapiens_message(self, websocket: WebSocket, session_id: str, message: Dict[str, Any]):
-        """Process incoming message from NetSapiens."""
+    async def _process_netsapiens_message(self, websocket: WebSocket, session_id: str, message: Dict[str, Any]) -> bool:
+        """Process incoming message from NetSapiens.
+        
+        Returns:
+            bool: True to continue stream loop, False to stop.
+        """
         message_type = message.get("event", "unknown")
         
         if message_type == "media":
             # Handle audio data
-            await self._handle_audio_data(session_id, message) 
+            await self._handle_audio_data(session_id, message)
+            return True
         elif message_type == "start":
             # Call started
             await self._handle_call_start(session_id, message)
+            return True
         elif message_type == "stop":
             # Call ended
-            await self._handle_call_stop(session_id, message)  
+            await self._handle_call_stop(session_id, message)
+            return False
         else:
             logger.warning(f"Unknown message type from NetSapiens: {message_type}")
+            return True
     
     async def _handle_audio_data(self, session_id: str, message: Dict[str, Any]):
         """Handle incoming audio data from NetSapiens."""
@@ -120,12 +124,110 @@ class NetSapiensWebSocketHandler:
     async def _handle_call_start(self, session_id: str, message: Dict[str, Any]):
         """Handle call start event."""
         logger.info(f"Call started for session: {session_id}")
-        # Notify agent session
+        # Extract custom parameters from start event
+        start_info = message.get("start", {}) if isinstance(message.get("start"), dict) else {}
+        params_raw = (
+            start_info.get("customParameters")
+            or start_info.get("parameters")
+            or message.get("parameters")
+            or message.get("customParameters")
+            or []
+        )
+        params: Dict[str, Any] = {}
+        # Support list of {name, value} or a dict
+        if isinstance(params_raw, list):
+            for p in params_raw:
+                name = (p or {}).get("name")
+                value = (p or {}).get("value")
+                if name is not None:
+                    params[str(name)] = value
+        elif isinstance(params_raw, dict):
+            params.update(params_raw)
+
+        account_domain = params.get("AccountDomain")
+        called_number = params.get("NmsDnis")
+        caller_id = params.get("NmsAni")
+        term_call_id = params.get("TermCallID")
+        orig_call_id = params.get("OrigCallID")
+        stream_id = start_info.get("streamId") or message.get("streamId")
+        external_id = orig_call_id or term_call_id or stream_id or session_id
+
+        # Lookup business and agent
+        business = None
+        agent = None
+        try:
+            print("Looking up business with domain:", account_domain)
+            business = await asyncio.to_thread(self.db.get_business_by_account_domain, account_domain)
+            if business:
+                agent = await asyncio.to_thread(self.db.get_active_agent_for_business, business.id)
+        except Exception as e:
+            logger.error(f"DB lookup failed on call start {session_id}: {str(e)}")
+
+        # Prepare agent config
+        interaction: Optional[Interaction] = None
+        business_id = business.id if business else None
+        agent_id = agent.id if agent else None
+
+        # Create interaction
+        try:
+            interaction = await asyncio.to_thread(
+                self.db.create_interaction,
+                call_id=external_id,
+                business_id=business_id,
+                agent_id=agent_id,
+                customer_identifier=str(caller_id) if caller_id else None,
+            )
+        except Exception as e:
+            logger.error(f"Failed to create interaction for {session_id}: {str(e)}")
+
+        # Start the agent session lazily on start
+        success = await self.session_manager.start_session(
+            session_id,
+            account_domain,
+            self.active_connections.get(session_id),
+            agent=agent,
+            interaction=interaction,
+            external_id=external_id,
+        )
+
+        if not success:
+            await self._send_error(self.active_connections.get(session_id), "Failed to start agent session")
+            return
+
+        # Notify agent session of call start
         await self.session_manager.notify_call_start(session_id, message)
     
     async def _handle_call_stop(self, session_id: str, message: Dict[str, Any]):
         """Handle call stop event."""
         logger.info(f"Call ended for session: {session_id}")
+        # Attempt to end interaction regardless of session state
+        try:
+            stop_info = message.get("stop", {}) if isinstance(message.get("stop"), dict) else {}
+            params_raw = (
+                stop_info.get("customParameters")
+                or stop_info.get("parameters")
+                or message.get("parameters")
+                or message.get("customParameters")
+                or []
+            )
+            params: Dict[str, Any] = {}
+            if isinstance(params_raw, list):
+                for p in params_raw:
+                    name = (p or {}).get("name")
+                    value = (p or {}).get("value")
+                    if name is not None:
+                        params[str(name)] = value
+            elif isinstance(params_raw, dict):
+                params.update(params_raw)
+
+            term_call_id = params.get("TermCallID") or params.get("OrigCallID")
+            stream_id = stop_info.get("streamId") or message.get("streamId")
+            external_id = term_call_id or stream_id or session_id
+            reason = message.get("reason") or stop_info.get("reason") or "hangup"
+            await asyncio.to_thread(self.db.end_interaction, external_id=external_id, outcome=reason)
+        except Exception as e:
+            logger.error(f"Failed to end interaction on stop for {session_id}: {str(e)}")
+
         # Notify agent session and clean up
         await self.session_manager.notify_call_end(session_id, message)
     

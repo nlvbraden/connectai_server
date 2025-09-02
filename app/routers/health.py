@@ -1,10 +1,6 @@
 """Health check endpoints."""
-
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import APIRouter
 from typing import Dict, Any
-# from ..database import SessionLocal, engine
-from ..core.session_manager import AgentSessionManager
 from ..utils.logging import get_logger
 import time
 

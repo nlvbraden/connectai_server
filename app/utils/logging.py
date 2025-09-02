@@ -3,7 +3,7 @@
 import logging
 import sys
 from typing import Optional
-from ..config import settings
+from ..settings import settings
 
 def setup_logging(log_level: Optional[str] = None) -> None:
     """Configure application logging."""

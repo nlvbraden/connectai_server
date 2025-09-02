@@ -1,5 +1,5 @@
 venv
-/.env
+.env
 
 # Terraform
 terraform
@@ -9,3 +9,6 @@ terraform
 
 #Pycache
 __pycache__
+
+# Scripts
+scripts

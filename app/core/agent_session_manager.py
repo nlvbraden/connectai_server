@@ -1,125 +1,16 @@
 """Agent session management for Google ADK integration."""
-
 import asyncio
 import logging
 from typing import Dict, Optional, Any
 from fastapi import WebSocket
-from google.adk.runners import Runner
-from google.adk.agents import LiveRequestQueue
-from google.adk.agents.run_config import RunConfig
-from google.adk.sessions.in_memory_session_service import InMemorySessionService
-import uuid
-from .agent_manager import create_agent
+from google.adk.events import Event
 from .audio_processor import AudioProcessor
 from google.genai.types import Blob, Content, Part
-from google.genai import types
-from datetime import datetime
+from ..models.agent import Agent
+from .session_utils.agent_session import AgentSession
+from ..models.interaction import Interaction
+
 logger = logging.getLogger(__name__)
-
-# Application name for ADK
-APP_NAME = "connectai_server"
-
-session_service = InMemorySessionService()
-
-async def start_agent_session(user_id: str, domain: str, is_audio: bool = False):
-    """Starts an ADK agent session.
-    
-    Args:
-        user_id: User identifier
-        domain: Business domain
-        is_audio: Whether to enable audio streaming
-        
-    Returns:
-        Tuple of (live_events, live_request_queue)
-    """
-    try:
-        # TODO: Replace with actual agent creation based on business domain
-        # For now, create a dummy agent placeholder
-        dummy_agent = create_agent(user_id, domain)
-        
-        # Create a Runner
-        runner = Runner(
-            app_name=APP_NAME,
-            agent=dummy_agent,
-            session_service=session_service,
-        )
-        
-        # Create a Session
-        session = await runner.session_service.create_session(
-            app_name=APP_NAME,
-            user_id=f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}",
-        )
-        
-        # Set response modality
-        voice_config = types.VoiceConfig(
-            prebuilt_voice_config=types.PrebuiltVoiceConfigDict(
-                voice_name='Sulafat'
-            )
-        )
-        speech_config = types.SpeechConfig(voice_config=voice_config)
-        run_config = RunConfig(response_modalities=["AUDIO"],
-         speech_config=speech_config,
-         output_audio_transcription=types.AudioTranscriptionConfig(),
-         input_audio_transcription=types.AudioTranscriptionConfig(),
-         )
-        
-        # Create a LiveRequestQueue for this session
-        live_request_queue = LiveRequestQueue()
-        
-        # Start agent session
-        live_events = runner.run_live(
-            session=session,
-            live_request_queue=live_request_queue,
-            run_config=run_config,
-        )
-        
-        logger.info(f"ADK session started for user: {user_id}, audio: {is_audio}, live_events type: {type(live_events)}")
-        return live_events, live_request_queue
-        
-    except Exception as e:
-        logger.error(f"Failed to start ADK session for user {user_id}: {str(e)}")
-        raise
-
-class AgentSession:
-    """Represents an active agent session."""
-    
-    def __init__(self, session_id: str, business_domain: str, websocket: WebSocket):
-        self.session_id = session_id
-        self.business_domain = business_domain
-        self.websocket = websocket
-        self.adk_session = None
-        self.live_events = None
-        self.live_request_queue = None
-        self.is_active = False
-        self.created_at = asyncio.get_event_loop().time()
-    
-    async def start_adk_session(self):
-        """Start the Google ADK session."""
-        try:
-            # Start ADK agent session with audio support
-            self.live_events, self.live_request_queue = await start_agent_session(
-                user_id=self.session_id,
-                domain=self.business_domain,
-                is_audio=True  # Enable audio streaming
-            )
-            self.is_active = True
-            logger.info(f"ADK session started for: {self.session_id}")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Failed to start ADK session {self.session_id}: {str(e)}")
-            return False
-    
-    async def stop_adk_session(self):
-        """Stop the Google ADK session."""
-        try:
-            if self.adk_session:
-                await self.adk_session.stop()
-            self.is_active = False
-            logger.info(f"ADK session stopped for: {self.session_id}")
-            
-        except Exception as e:
-            logger.error(f"Error stopping ADK session {self.session_id}: {str(e)}")
 
 class AgentSessionManager:
     """Manages active agent sessions with Google ADK."""
@@ -128,12 +19,20 @@ class AgentSessionManager:
         self.active_sessions: Dict[str, AgentSession] = {}
         self.session_tasks: Dict[str, asyncio.Task] = {}
         self.audio_processor = AudioProcessor()
+        from ..services.database_service import DatabaseService
+        self.db = DatabaseService()
     
-    async def start_session(self, session_id: str, business_domain: str, websocket: WebSocket) -> bool:
+    async def start_session(self, session_id: str, business_domain: str, websocket: WebSocket,
+                            agent: Optional[Agent] = None,
+                            interaction: Optional[Interaction] = None,
+                            external_id: Optional[str] = None) -> bool:
         """Start a new agent session."""
         try:
             # Create session
-            session = AgentSession(session_id, business_domain, websocket)
+            session = AgentSession(session_id, business_domain, websocket,
+                                   agent=agent,
+                                   interaction=interaction,
+                                   external_id=external_id)
             
             # Start ADK session
             if not await session.start_adk_session():
@@ -169,8 +68,8 @@ class AgentSessionManager:
                 if not task.done():
                     task.cancel()
                     try:
-                        await task
-                    except asyncio.CancelledError:
+                        await asyncio.wait_for(task, timeout=5)
+                    except (asyncio.CancelledError, asyncio.TimeoutError):
                         pass
                 del self.session_tasks[session_id]
             
@@ -219,13 +118,19 @@ class AgentSessionManager:
             async for event in session.live_events:
                 await self._process_agent_event(session, event)
                 
+        except asyncio.CancelledError:
+            # Task was cancelled as part of shutdown; exit quietly
+            logger.info(f"Agent-to-NetSapiens loop cancelled for {session.session_id}")
         except Exception as e:
             logger.error(f"Error in agent-to-NetSapiens loop {session.session_id}: {str(e)}")
             logger.exception("Full traceback:")
     
-    async def _process_agent_event(self, session: AgentSession, event: Any):
+    async def _process_agent_event(self, session: AgentSession, event: Event):
         """Process events from the agent."""
         try:
+            if not session.is_active:
+                # Session terminated; drop any late events to avoid tool/MCP activity
+                return
             logger.debug(f"Processing agent event type: {type(event).__name__}")
             
             # All event data is in content
@@ -236,12 +141,11 @@ class AgentSessionManager:
                         # This is binary data (audio)
                         blob = part.inline_data
                         if blob.mime_type and 'audio' in blob.mime_type:
-                            logger.info(f"Received audio from agent: {len(blob.data)} bytes")
                             await self._handle_audio_data(session, blob.data)
                     elif hasattr(part, 'text') and part.text:
                         # This is text content
-                        logger.info(f"Received text from agent: {part.text[:50]}...")
-                        await self._handle_agent_text_response(session, part.text)
+                        logger.info(f"{event.content.role} says: {part.text}")
+                        await self._handle_text_response(session, event.content.role, part.text, final=not event.partial)
             
             # Check for interrupt
             if hasattr(event, 'interrupted') and event.interrupted:
@@ -270,16 +174,24 @@ class AgentSessionManager:
         except Exception as e:
             logger.error(f"Error handling audio data: {str(e)}")
     
-    async def _handle_agent_text_response(self, session: AgentSession, text: str):
+    async def _handle_text_response(self, session: AgentSession, role: str, text: str, final: bool = False):
         """Handle text response from agent."""
-        # For now, we'll send text responses back to NetSapiens
-        # In production, you might want to convert to speech first
-        from .netsapiens_handler import netsapiens_handler
-        await netsapiens_handler.send_response_to_netsapiens(
-            session.session_id,
-            "text_response",
-            {"text": text}
-        )
+        # Log assistant message to DB when final response is received
+        if not final:
+            return
+
+        logger.info(f"Logged {role} message for {session.session_id}: {text}")
+        try:
+            if session.interaction:
+                await asyncio.to_thread(
+                    self.db.insert_message,
+                    interaction=session.interaction,
+                    role=role,
+                    content=text,
+                    function_calls=None,
+                )
+        except Exception as e:
+            logger.error(f"Failed to log {role} message for {session.session_id}: {str(e)}")
     
     async def _handle_agent_tool_call(self, session: AgentSession, event: Any):
         """Handle tool call from agent."""
@@ -315,6 +227,8 @@ class AgentSessionManager:
         
         session = self.active_sessions[session_id]
         try:
+            if not session.is_active:
+                return
             if session.live_request_queue and audio_data:
                 # audio_data is already processed (16-bit PCM @ 16kHz)
                 # Create a Blob with audio data
@@ -335,6 +249,8 @@ class AgentSessionManager:
         
         session = self.active_sessions[session_id]
         try:
+            if not session.is_active:
+                return
             if session.live_request_queue:
                 # Create Content object for text
                 content = Content(
@@ -369,9 +285,23 @@ class AgentSessionManager:
         """Notify agent that call has ended."""
         if session_id not in self.active_sessions:
             return
-        
-        # End the session when call ends
-        await self.end_session(session_id)
+        # Capture external_id before session removal
+        session = self.active_sessions[session_id]
+        external_id = session.external_id or session.session_id
+        outcome = call_info.get('reason') or call_info.get('end_reason') or 'hangup'
+        try:
+            # End the session
+            await self.end_session(session_id)
+        finally:
+            try:
+                # Close interaction in DB
+                await asyncio.to_thread(
+                    self.db.end_interaction,
+                    external_id=external_id,
+                    outcome=outcome,
+                )
+            except Exception as e:
+                logger.error(f"Failed to end interaction {external_id}: {str(e)}")
     
     def get_active_sessions(self) -> Dict[str, AgentSession]:
         """Get all active sessions."""

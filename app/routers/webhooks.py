@@ -1,13 +1,12 @@
 """NetSapiens webhook and WebSocket endpoints."""
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException, Depends, Request
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import Response
 from typing import Dict, Any, Optional
 from pydantic import BaseModel
-import uuid
 from ..core.netsapiens_handler import netsapiens_handler
 from ..utils.logging import get_logger
-from ..config import settings
+from ..settings import settings
 
 logger = get_logger(__name__)
 router = APIRouter(prefix="/webhooks", tags=["webhooks"])
@@ -18,29 +17,6 @@ class WebhookPayload(BaseModel):
     data: Dict[str, Any]
     timestamp: Optional[float] = None
     domain: Optional[str] = None
-
-@router.websocket("/stream")
-async def netsapiens_websocket_endpoint(websocket: WebSocket):
-    """WebSocket endpoint for NetSapiens WebResponder streaming."""
-    session_id = str(uuid.uuid4())
-    logger.info(f"New NetSapiens WebSocket connection attempt: {session_id}")
-    
-    try:
-        # Accept connection
-        success = await netsapiens_handler.connect(websocket, session_id)
-        if not success:
-            logger.error(f"Failed to establish WebSocket connection: {session_id}")
-            return
-        
-        # Handle the NetSapiens stream
-        await netsapiens_handler.handle_netsapiens_stream(websocket, session_id)
-        
-    except WebSocketDisconnect:
-        logger.info(f"NetSapiens WebSocket disconnected: {session_id}")
-    except Exception as e:
-        logger.error(f"Error in NetSapiens WebSocket endpoint {session_id}: {str(e)}")
-    finally:
-        await netsapiens_handler.disconnect(session_id)
 
 async def _process_webhook_event(payload: WebhookPayload, client_ip: str):
     """Process different types of webhook events."""
