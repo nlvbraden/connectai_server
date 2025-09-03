@@ -2,7 +2,7 @@ venv
 .env
 
 # Terraform
-terraform
+terraform 
 
 # Google ADK
 /service-account-key.json
@@ -12,3 +12,7 @@ __pycache__
 
 # Scripts
 scripts
+
+# Logs
+logs
+*.log

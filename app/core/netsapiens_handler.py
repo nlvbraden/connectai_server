@@ -318,6 +318,10 @@ class NetSapiensWebSocketHandler:
             
         except Exception as e:
             logger.error(f"Error sending response to NetSapiens session {session_id}: {str(e)}")
+    
+    async def send_stop_to_netsapiens(self, session_id: str):
+        """Send stop event to NetSapiens."""
+        await self.send_response_to_netsapiens(session_id, "stop", {})
 
 # Global WebSocket handler instance
 netsapiens_handler = NetSapiensWebSocketHandler()
