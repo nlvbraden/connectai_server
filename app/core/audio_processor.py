@@ -78,14 +78,12 @@ class AudioProcessor:
         # These filters are designed once and reused, avoiding repeated computation
         
         # Filter for 2x upsampling (8kHz -> 16kHz)
-        # Higher cutoff (0.9) preserves more high frequencies for better quality
-        # More taps (128) for sharper transition band and less ripple
-        self.upsample_filter = firwin(128, 0.9, window='hamming')
+        # Cutoff at Nyquist/2 to prevent aliasing
+        self.upsample_filter = firwin(64, 0.5, window='hamming')
         
         # Filter for 3x downsampling (24kHz -> 8kHz)
-        # Cutoff at 0.4 to preserve more audio content while preventing aliasing
-        # More taps (192) for better frequency response
-        self.downsample_filter = firwin(192, 0.4, window='hamming')
+        # Cutoff at 1/3 to prevent aliasing when downsampling
+        self.downsample_filter = firwin(96, 1/3, window='hamming')
     
     async def process_incoming_audio(self, audio_payload: str) -> bytes:
         """Process incoming audio from NetSapiens for Gemini.
