@@ -39,13 +39,14 @@ ENV HOST=0.0.0.0 \
     PORT=8000 \
     LOG_LEVEL=info
 
-# CPU optimization environment variables for c7i instances
-# Enable AVX-512 optimizations for NumPy and scientific computing
-ENV NPY_USE_AVX512=1 \
-    OMP_NUM_THREADS=2 \
-    MKL_NUM_THREADS=2 \
-    NUMEXPR_NUM_THREADS=2 \
-    OPENBLAS_NUM_THREADS=2
+# Math library threading: keep single-threaded to avoid CPU oversubscription
+# and reduce busy-wait behavior when idle
+ENV OMP_NUM_THREADS=1 \
+    MKL_NUM_THREADS=1 \
+    NUMEXPR_NUM_THREADS=1 \
+    OPENBLAS_NUM_THREADS=1 \
+    OMP_WAIT_POLICY=PASSIVE \
+    KMP_BLOCKTIME=0
 
 # Start the server with uvicorn directly (no autoreload in container)
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

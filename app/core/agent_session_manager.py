@@ -105,6 +105,8 @@ class AgentSessionManager:
 
         except Exception as e:
             logger.error(f"Error in session communication {session.session_id}: {str(e)}")
+        finally:
+            logger.info(f"Session communication task finished: {session.session_id}")
     
     async def _agent_to_netsapiens_loop(self, session: AgentSession):
         """Handle messages from agent to NetSapiens."""
@@ -116,6 +118,10 @@ class AgentSessionManager:
             logger.info(f"Starting agent-to-NetSapiens loop for {session.session_id}, live_events type: {type(session.live_events)}")
             
             async for event in session.live_events:
+                # If the session has been marked inactive, exit the loop promptly
+                if not session.is_active:
+                    logger.info(f"Session inactive; exiting agent loop: {session.session_id}")
+                    break
                 await self._process_agent_event(session, event)
                 
         except asyncio.CancelledError:
@@ -124,6 +130,8 @@ class AgentSessionManager:
         except Exception as e:
             logger.error(f"Error in agent-to-NetSapiens loop {session.session_id}: {str(e)}")
             logger.exception("Full traceback:")
+        finally:
+            logger.info(f"Agent-to-NetSapiens loop finished for {session.session_id}")
     
     async def _process_agent_event(self, session: AgentSession, event: Event):
         """Process events from the agent."""
@@ -310,3 +318,25 @@ class AgentSessionManager:
     def get_session_count(self) -> int:
         """Get count of active sessions."""
         return len(self.active_sessions)
+
+    def find_session_id_by_external_id(self, external_id: str) -> Optional[str]:
+        """Find the internal session_id by a known external_id (e.g., TermCallID/OrigCallID/streamId)."""
+        if not external_id:
+            return None
+        for sid, sess in self.active_sessions.items():
+            try:
+                if getattr(sess, "external_id", None) == external_id:
+                    return sid
+            except Exception:
+                continue
+        return None
+
+    async def end_session_by_external_id(self, external_id: str) -> bool:
+        """End a session referenced by external_id if present.
+        Returns True if a session was found and ended, False otherwise.
+        """
+        sid = self.find_session_id_by_external_id(external_id)
+        if not sid:
+            return False
+        await self.end_session(sid)
+        return True

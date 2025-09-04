@@ -155,6 +155,18 @@ class DatabaseService:
         print(f"Rows from business lookup: {rows}")
         return Business.from_db_row(rows[0]) if rows else None
 
+    def get_active_agent_for_domain(self, account_domain: str) -> Optional[Agent]:
+        sql = """
+            SELECT a.*
+            FROM agent a
+            JOIN business b ON a.business_id = b.id
+            WHERE b.domain = :account_domain AND a.is_active = true
+            ORDER BY a.updated_at DESC
+            LIMIT 1
+        """
+        rows = self._exec(sql, {"account_domain": account_domain})
+        return Agent.from_db_row(rows[0]) if rows else None
+
 
     def get_active_agent_for_business(self, business_id: int) -> Optional[Agent]:
         sql = """

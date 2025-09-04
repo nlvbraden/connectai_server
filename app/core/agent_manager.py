@@ -6,6 +6,7 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 import random
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StreamableHTTPConnectionParams
 import google.genai.types as genai_types
+import re
 
 def get_current_time(time_zone: str) -> str:
     """Get the current time with robust timezone fallback.
@@ -71,13 +72,15 @@ def create_agent(user_id, domain, *, system_prompt: str | None = None, mcp_serve
         
         #Add the prompt to the instruction
         instruction = (system_prompt or "Something is wrong please try again later.") + "\n\nCurrent Time: " + get_current_time("America/New_York")
+        #Make sure the domain is cleaned for naming agent - It should start with a letter (a-z, A-Z) or an underscore (_), and can only contain letters, digits (0-9), and underscores. -
+        agent_name = re.sub(r'[^a-zA-Z0-9_]', '', domain)
         agent_config = {
-            'name': f'agent_{domain}',
+            'name': f'agent_{agent_name}',
             'instruction': instruction,
             'tools': tools,
             'model': 'gemini-live-2.5-flash-preview-native-audio',
             'generate_content_config' : genai_types.GenerateContentConfig(
-                temperature=0.8
+                temperature=0.77
             )   
         }
         

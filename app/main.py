@@ -8,7 +8,7 @@ import asyncio
 from contextlib import asynccontextmanager
 
 # Import routers
-from .routers import health, webhooks, calls
+from .routers import health, webhooks, calls, debug
 
 # Import utilities and configuration
 from .settings import settings
@@ -113,6 +113,7 @@ async def general_exception_handler(request: Request, exc: Exception):
 app.include_router(health.router)
 app.include_router(webhooks.router)
 app.include_router(calls.router)
+app.include_router(debug.router)
 
 # Root endpoint
 @app.get("/")

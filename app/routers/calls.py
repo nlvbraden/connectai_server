@@ -90,13 +90,29 @@ async def handle_call_end(request: Request):
         # Extract call end parameters
         params = dict(request.query_params)
         term_call_id = params.get("TermCallID", "")
+        orig_call_id = params.get("OrigCallID", "")
         
         logger.info(f"Call ended - CallID: {term_call_id}")
         
-        # TODO: Notify existing websocket handler about call end
-        # This should integrate with the existing netsapiens_handler
-        
-        return {"status": "ok", "message": "Call end processed"}
+        # Attempt to find and end the corresponding session by external IDs
+        sm = netsapiens_handler.session_manager
+        ended_any = False
+
+        # Check both IDs; take care to close the websocket as well
+        for external_id in [term_call_id, orig_call_id]:
+            if not external_id:
+                continue
+            # capture session_id before ending
+            sid = sm.find_session_id_by_external_id(external_id)
+            if sid:
+                try:
+                    await sm.end_session(sid)
+                finally:
+                    # ensure websocket is closed and removed
+                    await netsapiens_handler.disconnect(sid)
+                ended_any = True
+
+        return {"status": "ok", "ended": ended_any, "term_call_id": term_call_id, "orig_call_id": orig_call_id}
         
     except Exception as e:
         logger.error(f"Error processing call end: {str(e)}")

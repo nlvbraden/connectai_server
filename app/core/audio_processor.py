@@ -6,9 +6,9 @@ import os
 import numpy as np
 from scipy.signal import resample_poly, firwin, upfirdn
 
-# Enable AVX-512 optimizations for c7i instances
-os.environ['NPY_USE_AVX512'] = '1'
-os.environ['OMP_NUM_THREADS'] = '2'
+# Respect container-managed threading and CPU feature flags (set in Dockerfile).
+# Do not override OpenMP/BLAS settings here to avoid oversubscription.
+# If needed, tune OMP/MKL/OPENBLAS via environment at container start.
 
 logger = logging.getLogger(__name__)
 

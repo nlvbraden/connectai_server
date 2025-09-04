@@ -8,6 +8,7 @@ from fastapi import WebSocket, WebSocketDisconnect
 from .agent_session_manager import AgentSessionManager
 from .audio_processor import AudioProcessor
 from ..services.database_service import DatabaseService
+from ..models import Interaction, Agent, Business
 
 logger = logging.getLogger(__name__)
 
@@ -34,13 +35,22 @@ class NetSapiensWebSocketHandler:
     async def disconnect(self, session_id: str):
         """Clean up WebSocket connection."""
         if session_id in self.active_connections:
+            websocket = self.active_connections.get(session_id)
             try:
-                # Clean up agent session
+                # Clean up agent session first
                 await self.session_manager.end_session(session_id)
-                del self.active_connections[session_id]
-                logger.info(f"WebSocket disconnected: {session_id}")
             except Exception as e:
-                logger.error(f"Error during disconnect {session_id}: {str(e)}")
+                logger.error(f"Error ending session during disconnect {session_id}: {str(e)}")
+            finally:
+                # Attempt to close the websocket gracefully
+                try:
+                    if websocket and hasattr(websocket, "close"):
+                        await websocket.close()
+                except Exception:
+                    pass
+                # Finally remove from active connections
+                self.active_connections.pop(session_id, None)
+                logger.info(f"WebSocket disconnected: {session_id}")
     
     async def handle_netsapiens_stream(self, websocket: WebSocket, session_id: str):
         """Handle incoming NetSapiens WebSocket stream."""
@@ -79,6 +89,8 @@ class NetSapiensWebSocketHandler:
             logger.info(f"NetSapiens WebSocket disconnected in stream loop: {session_id}")
         except Exception as e:
             logger.error(f"Error in stream loop {session_id}: {str(e)}")
+        finally:
+            logger.info(f"Stream loop finished for session: {session_id}")
     
     async def _process_netsapiens_message(self, websocket: WebSocket, session_id: str, message: Dict[str, Any]) -> bool:
         """Process incoming message from NetSapiens.
@@ -153,19 +165,16 @@ class NetSapiensWebSocketHandler:
         external_id = orig_call_id or term_call_id or stream_id or session_id
 
         # Lookup business and agent
-        business = None
         agent = None
         try:
             print("Looking up business with domain:", account_domain)
-            business = await asyncio.to_thread(self.db.get_business_by_account_domain, account_domain)
-            if business:
-                agent = await asyncio.to_thread(self.db.get_active_agent_for_business, business.id)
+            agent = await asyncio.to_thread(self.db.get_active_agent_for_domain, account_domain)
         except Exception as e:
             logger.error(f"DB lookup failed on call start {session_id}: {str(e)}")
 
         # Prepare agent config
         interaction: Optional[Interaction] = None
-        business_id = business.id if business else None
+        business_id = agent.business_id if agent else None
         agent_id = agent.id if agent else None
 
         # Create interaction
